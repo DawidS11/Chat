@@ -23,4 +23,18 @@ int main ()
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(SERVER_PORT);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (connect(client_socket, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr)) == -1)
+    {
+        // TODO: Error handling.
+        std::cerr << "Client: connect() error." << std::endl;
+        close(client_socket);
+        exit(1);
+    }
+
+    const char* message = "Client -> Server";
+    send(client_socket, message, strlen(message), 0);
+    std::cout << "Client has sent a message." << std::endl;
+
+    close(client_socket);
 }
