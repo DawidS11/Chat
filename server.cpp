@@ -39,4 +39,22 @@ int main()
         close(server_socket);
         exit(1);
     }
+
+    sockaddr_in client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    int client_socket;
+    while (true)
+    {
+        client_socket = accept(server_socket, reinterpret_cast<sockaddr*>(&client_addr), &client_len);
+        if (client_socket == -1)
+        {
+            // TODO: Error handling.
+            std::cerr << "accept() error." << std::endl;
+            close(server_socket);
+            exit(1);
+        }
+        std::cout << "Client connected." << std::endl;
+
+        
+    }
 }
