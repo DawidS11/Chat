@@ -5,6 +5,8 @@
 
 #include "values.hpp"
 
+int num_clients = 0;
+
 int main()
 {
     std::cout << "SERVER" << std::endl;
@@ -55,6 +57,10 @@ int main()
         }
         std::cout << "Client connected." << std::endl;
 
-        
+        const char* message = "Server -> Client";
+        send(client_socket, message, strlen(message), 0);
+
+        close(client_socket);
+        close(server_socket);
     }
 }
