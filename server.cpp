@@ -14,6 +14,7 @@ int main()
     {
         // TODO: Error handling.
         std::cerr << "socket() error." << std::endl;
+        close(server_socket);
         exit(1);
     }
 
@@ -27,6 +28,14 @@ int main()
     {
         // TODO: Error handling.
         std::cerr << "bind() error." << std::endl;
+        close(server_socket);
+        exit(1);
+    }
+
+    if (listen(server_socket, MAX_CLIENTS) == -1)
+    {
+        // TODO: Error handling.
+        std::cerr << "listen() error." << std::endl;
         close(server_socket);
         exit(1);
     }
