@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <unistd.h>
 
 #include "values.hpp"
 
@@ -22,5 +23,11 @@ int main()
     server_addr.sin_port = htons(SERVER_PORT);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    
+    if (bind(server_socket, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr)) == -1)
+    {
+        // TODO: Error handling.
+        std::cerr << "bind() error." << std::endl;
+        close(server_socket);
+        exit(1);
+    }
 }
