@@ -15,7 +15,7 @@ int main()
     if (server_socket == -1)
     {
         // TODO: Error handling.
-        std::cerr << "socket() error." << std::endl;
+        std::cerr << "Server: socket() error." << std::endl;
         close(server_socket);
         exit(1);
     }
@@ -29,7 +29,7 @@ int main()
     if (bind(server_socket, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr)) == -1)
     {
         // TODO: Error handling.
-        std::cerr << "bind() error." << std::endl;
+        std::cerr << "Server: bind() error." << std::endl;
         close(server_socket);
         exit(1);
     }
@@ -37,7 +37,7 @@ int main()
     if (listen(server_socket, MAX_CLIENTS) == -1)
     {
         // TODO: Error handling.
-        std::cerr << "listen() error." << std::endl;
+        std::cerr << "Server: listen() error." << std::endl;
         close(server_socket);
         exit(1);
     }
@@ -51,7 +51,7 @@ int main()
         if (client_socket == -1)
         {
             // TODO: Error handling.
-            std::cerr << "accept() error." << std::endl;
+            std::cerr << "Server: accept() error." << std::endl;
             close(server_socket);
             exit(1);
         }
