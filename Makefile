@@ -5,11 +5,11 @@ CFLAGS = -std=c++20 -Wall -Wextra $(CPPFLAGS)
 #chat: client.o server.o
 #	$(CC) $(CFLAGS) -o chat client.o server.o
 
-client.o: client.cpp
-	$(CC) $(CFLAGS) -c client.cpp
+client: client.cpp
+	$(CC) $(CFLAGS) -c values.hpp client.cpp
 
-server.o: server.cpp
-	$(CC) $(CFLAGS) -c server.cpp
+server: server.cpp
+	$(CC) $(CFLAGS) -c values.hpp server.cpp
 
 clean:
-	rm -f client.o server.o
+	rm -f client.o server.o values.hpp.gch
