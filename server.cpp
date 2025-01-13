@@ -62,5 +62,7 @@ int main()
 
         close(client_socket);
         close(server_socket);
+
+        break; // temporary
     }
 }
