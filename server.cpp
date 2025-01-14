@@ -82,6 +82,7 @@ int main()
         }
         std::cout << "Cout: Client connected." << std::endl;
         ++num_clients;
+        std::cout << "NUM CLIENTS: " << num_clients << std::endl;
 
         /*const char* message = "What is your name?";
         send(client_socket, message, strlen(message) + 1, 0);
@@ -89,10 +90,6 @@ int main()
 
         std::thread th(handle_client, client_socket);
         th.detach();
-
-        close(client_socket);
-        close(server_socket);
-
-        //break; // temporary
     }
+    close(server_socket);
 }
