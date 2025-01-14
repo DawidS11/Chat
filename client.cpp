@@ -3,8 +3,19 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <thread>
 
 #include "values.hpp"
+
+void send_msg(int client_socket)
+{
+
+}
+
+void recv_msg(int client_socket)
+{
+
+}
 
 int main ()
 {
@@ -43,11 +54,11 @@ int main ()
     send(client_socket, message, strlen(message), 0);
     std::cout << "C: " << message << std::endl;
 
-    /*char msg[MSG_SIZE];
-    while (recv(client_socket, msg, sizeof(msg), 0) != 0)
-    {
-        std::cout << "Client: " << msg << std::endl;
-    }*/
+    std::thread th_send(send_msg, client_socket);
+    std::thread th_recv(recv_msg, client_socket);
+    
+    th_send.join();
+    th_recv.join();
 
     close(client_socket);
 }

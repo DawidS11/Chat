@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string>
+#include <thread>
 
 #include "values.hpp"
 
@@ -70,21 +71,18 @@ int main()
             exit(1);
         }
         std::cout << "Cout: Client connected." << std::endl;
+        ++num_clients;
 
         const char* message = "What is your name?";
         send(client_socket, message, strlen(message) + 1, 0);
         std::cout << "S: " << message << std::endl;
 
-        /*char msg[MSG_SIZE];
-        if (recv(client_socket, msg, sizeof(msg), 0) != 0)
-        {
-            std::cout << "C: " << msg << std::endl;
-        }*/
-        handle_client(client_socket);
+        std::thread th(handle_client, client_socket);
+        th.detach();
 
         close(client_socket);
         close(server_socket);
 
-        break; // temporary
+        //break; // temporary
     }
 }
