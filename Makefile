@@ -5,6 +5,9 @@ CFLAGS = -std=c++20 -Wall -Wextra $(CPPFLAGS)
 #chat: client.o server.o
 #	$(CC) $(CFLAGS) -o chat client.o server.o
 
+all:
+	make client; make server
+
 client: client.o
 	$(CC) $(CFLAGS) -o client client.o
 
