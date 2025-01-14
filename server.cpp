@@ -11,13 +11,25 @@ int num_clients = 0;
 
 void handle_client(int client_socket)
 {
+    std::cout << "XXXXX1" << std::endl;
     char msg[MSG_SIZE];
 
-    while (recv(client_socket, msg, sizeof(msg), 0) != 0)
+    int receive = recv(client_socket, msg, sizeof(msg), 0);
+    std::cout << "XXXXX2" << std::endl;
+    while (receive != 0)
     {
+        if (receive == -1)
+        {
+            // TODO: Error handling.
+            std::cerr << "Server: recv() error." << std::endl;
+            close(client_socket);
+            exit(1);
+        }
         //char name[7]; // for example client1
 
-        std::cout << "C: " << msg << std::endl;
+        std::cout << "C: " << msg << "-" << std::endl;
+
+        receive = recv(client_socket, msg, sizeof(msg), 0);
     }
 }
 
