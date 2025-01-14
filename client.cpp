@@ -33,17 +33,17 @@ int main ()
         exit(1);
     }
 
-    char msg[25];
+    char msg[MSG_SIZE];
     if (recv(client_socket, msg, sizeof(msg), 0) != 0)
     {
         std::cout << "S: " << msg << std::endl;
     }
 
-    const char* message = "My name is XXX";
+    const char* message = "client1";
     send(client_socket, message, strlen(message), 0);
     std::cout << "C: " << message << std::endl;
 
-    /*char msg[25];
+    /*char msg[MSG_SIZE];
     while (recv(client_socket, msg, sizeof(msg), 0) != 0)
     {
         std::cout << "Client: " << msg << std::endl;

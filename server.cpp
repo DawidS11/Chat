@@ -8,6 +8,19 @@
 
 int num_clients = 0;
 
+void handle_client(int client_socket)
+{
+    char msg[MSG_SIZE];
+
+    while (recv(client_socket, msg, sizeof(msg), 0) != 0)
+    {
+        //char name[7]; // for example client1
+
+        std::cout << "C: " << msg << std::endl;
+    }
+}
+
+
 int main()
 {
     std::cout << "SERVER" << std::endl;
@@ -62,11 +75,12 @@ int main()
         send(client_socket, message, strlen(message) + 1, 0);
         std::cout << "S: " << message << std::endl;
 
-        char msg[25];
+        /*char msg[MSG_SIZE];
         if (recv(client_socket, msg, sizeof(msg), 0) != 0)
         {
             std::cout << "C: " << msg << std::endl;
-        }
+        }*/
+        handle_client(client_socket);
 
         close(client_socket);
         close(server_socket);
