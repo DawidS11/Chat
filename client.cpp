@@ -14,11 +14,11 @@ void send_msg(int client_socket)
     {
         std::cout << "You: ";
         std::getline(std::cin, message);
-        if (message == "Quit"|| message == "quit"){
+        send(client_socket, message.c_str(), message.length() + 1, 0);
+        if (message == "quit"){
             close(client_socket);
             exit(0);
         }
-        send(client_socket, message.c_str(), message.length() + 1, 0);
     }
 }
 
@@ -29,10 +29,6 @@ void recv_msg(int client_socket)
     {
         if (recv(client_socket, msg, sizeof(msg), 0) <= 0)
         {
-            // TODO: Error handling.
-            //std::cerr << "Client: recv() error." << std::endl;
-            //close(client_socket);
-            //exit(1);
             continue;
         }
         std::cout << "C: " << msg << std::endl;
@@ -65,12 +61,6 @@ int main ()
         close(client_socket);
         exit(1);
     }
-
-    /*char msg[MSG_SIZE];
-    if (recv(client_socket, msg, sizeof(msg), 0) != 0)
-    {
-        std::cout << "S: " << msg << std::endl;
-    }*/
 
     //std::string message;
     //std::getline(std::cin, message);

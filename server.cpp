@@ -4,27 +4,32 @@
 #include <unistd.h>
 #include <string>
 #include <thread>
+#include <mutex>
 
 #include "values.hpp"
 
 int num_clients = 0;
+std::mutex mtx;
 
 void handle_client(int client_socket)
 {
-    std::cout << "XXXXX1" << std::endl;
     char msg[MSG_SIZE];
 
     int receive;
-    std::cout << "XXXXX2" << std::endl;
     while (true)
     {
         receive = recv(client_socket, msg, sizeof(msg), 0);
         if (receive <= 0)
         {
-            // TODO: Error handling.
-            //std::cerr << "Server: recv() error." << std::endl;
-            //close(client_socket);
             return;
+        }
+
+        if (std::strcmp(msg, "quit") == 0)
+        {
+            mtx.lock();
+            --num_clients;
+            mtx.unlock();
+            std::cout << "NUM CLIENTS: " << num_clients << std::endl;
         }
 
         std::cout << "C: " << msg << "-" << std::endl;
@@ -81,12 +86,14 @@ int main()
             exit(1);
         }
         std::cout << "Cout: Client connected." << std::endl;
+        mtx.lock();
         ++num_clients;
+        mtx.unlock();
         std::cout << "NUM CLIENTS: " << num_clients << std::endl;
 
-        /*const char* message = "What is your name?";
+        const char* message = "Welcome! Type quit to leave the chat.";
         send(client_socket, message, strlen(message) + 1, 0);
-        std::cout << "S: " << message << std::endl;*/
+        std::cout << "S: " << message << std::endl;
 
         std::thread th(handle_client, client_socket);
         th.detach();
