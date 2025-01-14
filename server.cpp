@@ -2,6 +2,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <string>
 
 #include "values.hpp"
 
@@ -57,13 +58,14 @@ int main()
         }
         std::cout << "Cout: Client connected." << std::endl;
 
-        const char* message = "Server -> Client";
-        send(client_socket, message, strlen(message), 0);
+        const char* message = "What is your name?";
+        send(client_socket, message, strlen(message) + 1, 0);
+        std::cout << "S: " << message << std::endl;
 
         char msg[25];
         if (recv(client_socket, msg, sizeof(msg), 0) != 0)
         {
-            std::cout << "Server: " << msg << std::endl;
+            std::cout << "C: " << msg << std::endl;
         }
 
         close(client_socket);

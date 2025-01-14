@@ -33,9 +33,15 @@ int main ()
         exit(1);
     }
 
-    const char* message = "Client -> Server";
+    char msg[25];
+    if (recv(client_socket, msg, sizeof(msg), 0) != 0)
+    {
+        std::cout << "S: " << msg << std::endl;
+    }
+
+    const char* message = "My name is XXX";
     send(client_socket, message, strlen(message), 0);
-    std::cout << "Cout: Client has sent a message." << std::endl;
+    std::cout << "C: " << message << std::endl;
 
     /*char msg[25];
     while (recv(client_socket, msg, sizeof(msg), 0) != 0)
