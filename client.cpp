@@ -35,7 +35,13 @@ int main ()
 
     const char* message = "Client -> Server";
     send(client_socket, message, strlen(message), 0);
-    std::cout << "Client has sent a message." << std::endl;
+    std::cout << "Cout: Client has sent a message." << std::endl;
+
+    /*char msg[25];
+    while (recv(client_socket, msg, sizeof(msg), 0) != 0)
+    {
+        std::cout << "Client: " << msg << std::endl;
+    }*/
 
     close(client_socket);
 }

@@ -55,10 +55,16 @@ int main()
             close(server_socket);
             exit(1);
         }
-        std::cout << "Client connected." << std::endl;
+        std::cout << "Cout: Client connected." << std::endl;
 
         const char* message = "Server -> Client";
         send(client_socket, message, strlen(message), 0);
+
+        char msg[25];
+        if (recv(client_socket, msg, sizeof(msg), 0) != 0)
+        {
+            std::cout << "Server: " << msg << std::endl;
+        }
 
         close(client_socket);
         close(server_socket);
