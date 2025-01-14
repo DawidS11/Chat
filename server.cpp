@@ -14,22 +14,20 @@ void handle_client(int client_socket)
     std::cout << "XXXXX1" << std::endl;
     char msg[MSG_SIZE];
 
-    int receive = recv(client_socket, msg, sizeof(msg), 0);
+    int receive;
     std::cout << "XXXXX2" << std::endl;
-    while (receive != 0)
+    while (true)
     {
-        if (receive == -1)
+        receive = recv(client_socket, msg, sizeof(msg), 0);
+        if (receive <= 0)
         {
             // TODO: Error handling.
-            std::cerr << "Server: recv() error." << std::endl;
-            close(client_socket);
-            exit(1);
+            //std::cerr << "Server: recv() error." << std::endl;
+            //close(client_socket);
+            return;
         }
-        //char name[7]; // for example client1
 
         std::cout << "C: " << msg << "-" << std::endl;
-
-        receive = recv(client_socket, msg, sizeof(msg), 0);
     }
 }
 
@@ -85,9 +83,9 @@ int main()
         std::cout << "Cout: Client connected." << std::endl;
         ++num_clients;
 
-        const char* message = "What is your name?";
+        /*const char* message = "What is your name?";
         send(client_socket, message, strlen(message) + 1, 0);
-        std::cout << "S: " << message << std::endl;
+        std::cout << "S: " << message << std::endl;*/
 
         std::thread th(handle_client, client_socket);
         th.detach();

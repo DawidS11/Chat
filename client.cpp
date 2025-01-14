@@ -10,10 +10,9 @@
 void send_msg(int client_socket)
 {
     std::string message;
-    //send(client_socket, message.c_str(), message.length() + 1, 0);
-    //std::cout << "C: " << message << std::endl;
     while (true)
     {
+        std::cout << "You: ";
         std::getline(std::cin, message);
         if (message == "Quit"|| message == "quit"){
             close(client_socket);
@@ -23,17 +22,18 @@ void send_msg(int client_socket)
     }
 }
 
-void recv_msg(int client_socket, std::string client_name)
+void recv_msg(int client_socket)
 {
-    char msg[MSG_SIZE + client_name.length() + 1];
+    char msg[MSG_SIZE];
     while (true)
     {
-        if (recv(client_socket, msg, MSG_SIZE + client_name.length() + 1, 0) == -1)
+        if (recv(client_socket, msg, sizeof(msg), 0) <= 0)
         {
             // TODO: Error handling.
-            std::cerr << "Client: recv() error." << std::endl;
-            close(client_socket);
-            exit(1);
+            //std::cerr << "Client: recv() error." << std::endl;
+            //close(client_socket);
+            //exit(1);
+            continue;
         }
         std::cout << "C: " << msg << std::endl;
     }
@@ -66,11 +66,11 @@ int main ()
         exit(1);
     }
 
-    char msg[MSG_SIZE];
+    /*char msg[MSG_SIZE];
     if (recv(client_socket, msg, sizeof(msg), 0) != 0)
     {
         std::cout << "S: " << msg << std::endl;
-    }
+    }*/
 
     //std::string message;
     //std::getline(std::cin, message);
@@ -81,9 +81,9 @@ int main ()
     std::string client_name = "client1";
 
     std::thread th_send(send_msg, client_socket);
-    std::thread th_recv(recv_msg, client_socket, client_name);
-    th_send.join();
-    th_recv.join();
+    std::thread th_recv(recv_msg, client_socket);
+    if (th_send.joinable()) th_send.join();
+    if (th_recv.joinable()) th_recv.join();
 
     close(client_socket);
 }
