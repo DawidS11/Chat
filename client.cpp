@@ -68,6 +68,11 @@ int main ()
     //send(client_socket, message.c_str(), message.length() + 1, 0);
     //std::cout << "C: My name is " << message << std::endl;
 
+    char name[MSG_SIZE];
+	std::cout << "Enter your name: ";
+	std::cin.getline(name, MSG_SIZE);
+	send(client_socket, name, sizeof(name), 0);
+
     std::string client_name = "client1";
 
     std::thread th_send(send_msg, client_socket);

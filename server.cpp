@@ -5,11 +5,13 @@
 #include <string>
 #include <thread>
 #include <mutex>
+#include <unordered_map>
 
 #include "values.hpp"
 
 int num_clients = 0;
 std::mutex mtx;
+std::unordered_map<int, std::string> clients;
 
 void handle_client(int client_socket)
 {
@@ -31,8 +33,6 @@ void handle_client(int client_socket)
             mtx.unlock();
             std::cout << "NUM CLIENTS: " << num_clients << std::endl;
         }
-
-        std::cout << "C: " << msg << "-" << std::endl;
     }
 }
 
@@ -91,9 +91,8 @@ int main()
         mtx.unlock();
         std::cout << "NUM CLIENTS: " << num_clients << std::endl;
 
-        const char* message = "Welcome! Type quit to leave the chat.";
+        const char* message = "Admin: Welcome! Type quit to leave the chat.";
         send(client_socket, message, strlen(message) + 1, 0);
-        std::cout << "S: " << message << std::endl;
 
         std::thread th(handle_client, client_socket);
         th.detach();
