@@ -9,13 +9,13 @@
 
 void send_msg(int client_socket)
 {
-    std::string message;
+    char msg[MSG_SIZE];
     while (true)
     {
-        std::cout << "You: ";
-        std::getline(std::cin, message);
-        send(client_socket, message.c_str(), message.length() + 1, 0);
-        if (message == "quit"){
+        std::cout << "Type here: ";
+        std::cin.getline(msg, MSG_SIZE);
+        send(client_socket, msg, sizeof(msg), 0);
+        if (std::strcmp(msg, "quit") == 0){
             close(client_socket);
             exit(0);
         }
