@@ -11,12 +11,17 @@
 
 int num_clients = 0;
 std::mutex mtx;
+std::mutex mtx_msg;
 std::unordered_map<int, std::string> clients;
 
 void handle_client(int client_socket)
 {
+    mtx_msg.lock();
+    const char welcome_msg[MSG_SIZE] = "Admin: Welcome! Type quit to leave the chat.";
+    send(client_socket, welcome_msg, sizeof(welcome_msg), 0);
+    mtx_msg.unlock();
+    
     char msg[MSG_SIZE];
-
     int receive;
     while (true)
     {
@@ -90,9 +95,6 @@ int main()
         ++num_clients;
         mtx.unlock();
         std::cout << "NUM CLIENTS: " << num_clients << std::endl;
-
-        const char* message = "Admin: Welcome! Type quit to leave the chat.";
-        send(client_socket, message, strlen(message) + 1, 0);
 
         std::thread th(handle_client, client_socket);
         th.detach();
