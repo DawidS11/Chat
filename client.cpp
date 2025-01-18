@@ -39,7 +39,7 @@ void recv_msg(int client_socket)
         {
             std::cout << backspace_code;
         }
-        std::cout << "C: " << msg << std::endl;
+        std::cout << msg << std::endl;
         std::cout << type_here_msg;
         std::fflush(stdout);
     }
