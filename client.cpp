@@ -72,18 +72,10 @@ int main ()
         exit(1);
     }
 
-    //std::string message;
-    //std::getline(std::cin, message);
-    //std::cin >> message;
-    //send(client_socket, message.c_str(), message.length() + 1, 0);
-    //std::cout << "C: My name is " << message << std::endl;
-
     char name[MSG_SIZE];
 	std::cout << "Enter your name: ";
 	std::cin.getline(name, MSG_SIZE);
 	send(client_socket, name, sizeof(name), 0);
-
-    std::string client_name = "client1";
 
     std::thread th_send(send_msg, client_socket);
     std::thread th_recv(recv_msg, client_socket);

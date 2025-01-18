@@ -11,15 +11,25 @@
 
 int num_clients = 0;
 std::mutex mtx;
-std::mutex mtx_msg;
 std::unordered_map<int, std::string> clients;
 
 void handle_client(int client_socket)
 {
-    mtx_msg.lock();
     const char welcome_msg[MSG_SIZE] = "Admin: Welcome! Type quit to leave the chat.";
     send(client_socket, welcome_msg, sizeof(welcome_msg), 0);
-    mtx_msg.unlock();
+
+    char name[MSG_SIZE];
+    if (recv(client_socket, name, sizeof(name), 0) == -1)
+    {
+        // TODO: Error handling.
+        std::cerr << "Server: recv() name error." << std::endl;
+        return;
+    }
+    clients.try_emplace(client_socket, name);
+    for (auto it : clients)
+    {
+        std::cout << it.first << " " << it.second << std::endl;
+    }
     
     char msg[MSG_SIZE];
     int receive;
@@ -35,8 +45,9 @@ void handle_client(int client_socket)
         {
             mtx.lock();
             --num_clients;
+            clients.erase(client_socket);
             mtx.unlock();
-            std::cout << "NUM CLIENTS: " << num_clients << std::endl;
+            std::cout << "NUM CLIENTS2: " << num_clients << std::endl;
         }
     }
 }
