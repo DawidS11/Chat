@@ -34,8 +34,8 @@ void recv_msg(int client_socket)
 
         char backspace_code = 8;
         std::string type_here_msg = "Type here: ";
-        int welcome_msg_size = type_here_msg.length() + 1;
-        for (int i = 0; i < welcome_msg_size; ++i)
+        int type_here_msg_size = type_here_msg.length() + 1;
+        for (int i = 0; i < type_here_msg_size; ++i)
         {
             std::cout << backspace_code;
         }

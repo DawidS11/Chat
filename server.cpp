@@ -13,6 +13,17 @@ int num_clients = 0;
 std::mutex mtx;
 std::unordered_map<int, std::string> clients;
 
+void send_to_all(char* name, char* msg, const bool did_quit = false)
+{
+    std::strcat(name, (did_quit ? " " : ": "));
+    std::strcat(name, msg);
+    std::cout << "XXX: " << name;
+    for (auto it : clients)
+    {
+        send(it.first, name, sizeof(name), 0);
+    }
+}
+
 void handle_client(int client_socket)
 {
     const char welcome_msg[MSG_SIZE] = "Admin: Welcome! Type quit to leave the chat.";
@@ -30,11 +41,13 @@ void handle_client(int client_socket)
     {
         std::cout << it.first << " " << it.second << std::endl;
     }
+    std::cout << "Name: " << name << std::endl;
     
     char msg[MSG_SIZE];
     int receive;
     while (true)
     {
+        std::cout << "Q " << std::endl;
         receive = recv(client_socket, msg, sizeof(msg), 0);
         if (receive <= 0)
         {
@@ -47,8 +60,12 @@ void handle_client(int client_socket)
             --num_clients;
             clients.erase(client_socket);
             mtx.unlock();
+            char quit_msg[MSG_SIZE] = "has left the chat.";
+            send_to_all(name, quit_msg, true);
             std::cout << "NUM CLIENTS2: " << num_clients << std::endl;
         }
+
+        send_to_all(name, msg);
     }
 }
 
