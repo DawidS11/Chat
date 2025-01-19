@@ -9,13 +9,23 @@
 
 void send_msg(int client_socket)
 {
-    char msg[MSG_SIZE];
+    //char msg[MSG_SIZE];
     while (true)
     {
         std::cout << "Type here1: ";
+        
+        char msg[MSG_SIZE];
         std::cin.getline(msg, MSG_SIZE);
+        std::cout << "\033[A\033[2K" << std::flush;
+
+        if (std::strcmp(msg, "quit") != 0)
+        {
+            std::cout << "You: " << msg << std::endl;
+        }
+
         send(client_socket, msg, sizeof(msg), 0);
-        if (std::strcmp(msg, "quit") == 0){
+        if (std::strcmp(msg, "quit") == 0)
+        {
             close(client_socket);
             exit(0);
         }

@@ -13,7 +13,7 @@ int num_clients = 0;
 std::mutex mtx;
 std::unordered_map<int, std::string> clients;
 
-void send_to_all(char* name, char* msg, const bool did_quit = false)
+void send_to_all(char* name, char* msg, const int client_socket, const bool did_quit = false)
 {
     char msg_to_send[MSG_SIZE] = "";
     std::strcat(msg_to_send, name);
@@ -21,7 +21,10 @@ void send_to_all(char* name, char* msg, const bool did_quit = false)
     std::strcat(msg_to_send, msg);
     for (auto it : clients)
     {
-        send(it.first, msg_to_send, sizeof(msg_to_send), 0);
+        if (it.first != client_socket)
+        {
+            send(it.first, msg_to_send, sizeof(msg_to_send), 0);
+        }
     }
 }
 
@@ -56,12 +59,12 @@ void handle_client(int client_socket)
             clients.erase(client_socket);
             mtx.unlock();
             char quit_msg[MSG_SIZE] = "has left the chat.";
-            send_to_all(name, quit_msg, true);
+            send_to_all(name, quit_msg, client_socket, true);
             std::cout << "NUM CLIENTS2: " << num_clients << std::endl;
         }
         else
         {
-            send_to_all(name, msg);
+            send_to_all(name, msg, client_socket);
         }
     }
 }
