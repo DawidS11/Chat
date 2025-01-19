@@ -26,6 +26,7 @@ void send_msg(int client_socket)
         send(client_socket, msg, sizeof(msg), 0);
         if (std::strcmp(msg, "quit") == 0)
         {
+            std::cout << "You have left the chat." << std::endl;
             close(client_socket);
             exit(0);
         }

@@ -30,7 +30,7 @@ void send_to_all(char* name, char* msg, const int client_socket, const bool did_
 
 void handle_client(int client_socket)
 {
-    const char welcome_msg[MSG_SIZE] = "Admin: Welcome! Type quit to leave the chat.";
+    const char welcome_msg[MSG_SIZE] = "Admin: Welcome! Type \"quit\" to leave the chat.";
     send(client_socket, welcome_msg, sizeof(welcome_msg), 0);
 
     char name[MSG_SIZE];
