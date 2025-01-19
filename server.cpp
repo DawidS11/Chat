@@ -15,24 +15,35 @@ std::unordered_map<int, std::string> clients;
 
 void send_to_all(char* name, char* msg, const int client_socket, const bool did_quit = false)
 {
-    char msg_to_send[MSG_SIZE] = "";
-    std::strcat(msg_to_send, name);
-    std::strcat(msg_to_send, (did_quit ? " " : ": "));
-    std::strcat(msg_to_send, msg);
+    std::string msg_to_send = name;
+    msg_to_send += (did_quit ? " " : ": ");
+    msg_to_send += msg;
     for (auto it : clients)
     {
         if (it.first != client_socket)
         {
-            send(it.first, msg_to_send, sizeof(msg_to_send), 0);
+            send(it.first, msg_to_send.c_str(), msg_to_send.length() + 1, 0);
+        }
+    }
+}
+
+void send_welcome_msg(const int client_socket)
+{
+    std::string welcome_msg = "Admin: Welcome " + clients[client_socket] + "! Type \"quit\" to leave the chat.";
+    send(client_socket, welcome_msg.c_str(), welcome_msg.length() + 1, 0);
+
+    std::string has_joined_msg = clients[client_socket] + " has joined the chat.";
+    for (auto it : clients)
+    {
+        if (it.first != client_socket)
+        {
+            send(it.first, has_joined_msg.c_str(), has_joined_msg.length() + 1, 0);
         }
     }
 }
 
 void handle_client(int client_socket)
 {
-    const char welcome_msg[MSG_SIZE] = "Admin: Welcome! Type \"quit\" to leave the chat.";
-    send(client_socket, welcome_msg, sizeof(welcome_msg), 0);
-
     char name[MSG_SIZE];
     if (recv(client_socket, name, sizeof(name), 0) == -1)
     {
@@ -42,6 +53,8 @@ void handle_client(int client_socket)
     }
     clients.try_emplace(client_socket, name);
     
+    send_welcome_msg(client_socket);
+
     char msg[MSG_SIZE];
     int receive;
     while (true)

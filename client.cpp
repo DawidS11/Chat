@@ -43,18 +43,15 @@ void recv_msg(int client_socket)
             continue;
         }
 
-        std::string type_here_msg = "Type: ";
         std::cout << "\n\033[A\033[2K";
         std::cout << msg << std::endl;
-        std::cout << type_here_msg;
+        std::cout << "Type: ";
         std::fflush(stdout);
     }
 }
 
 int main ()
 {
-    std::cout << "CLIENT" << std::endl;
-
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1)
     {
