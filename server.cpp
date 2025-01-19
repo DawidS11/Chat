@@ -15,12 +15,13 @@ std::unordered_map<int, std::string> clients;
 
 void send_to_all(char* name, char* msg, const bool did_quit = false)
 {
-    std::strcat(name, (did_quit ? " " : ": "));
-    std::strcat(name, msg);
-    std::cout << "XXX: " << name;
+    char msg_to_send[MSG_SIZE] = "";
+    std::strcat(msg_to_send, name);
+    std::strcat(msg_to_send, (did_quit ? " " : ": "));
+    std::strcat(msg_to_send, msg);
     for (auto it : clients)
     {
-        send(it.first, name, sizeof(name), 0);
+        send(it.first, msg_to_send, sizeof(msg_to_send), 0);
     }
 }
 
@@ -37,17 +38,11 @@ void handle_client(int client_socket)
         return;
     }
     clients.try_emplace(client_socket, name);
-    for (auto it : clients)
-    {
-        std::cout << it.first << " " << it.second << std::endl;
-    }
-    std::cout << "Name: " << name << std::endl;
     
     char msg[MSG_SIZE];
     int receive;
     while (true)
     {
-        std::cout << "Q " << std::endl;
         receive = recv(client_socket, msg, sizeof(msg), 0);
         if (receive <= 0)
         {
@@ -64,8 +59,10 @@ void handle_client(int client_socket)
             send_to_all(name, quit_msg, true);
             std::cout << "NUM CLIENTS2: " << num_clients << std::endl;
         }
-
-        send_to_all(name, msg);
+        else
+        {
+            send_to_all(name, msg);
+        }
     }
 }
 
