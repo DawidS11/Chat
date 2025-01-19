@@ -12,7 +12,7 @@ void send_msg(int client_socket)
     //char msg[MSG_SIZE];
     while (true)
     {
-        std::cout << "Type here1: ";
+        std::cout << "Type: ";
         
         char msg[MSG_SIZE];
         std::cin.getline(msg, MSG_SIZE);
@@ -35,7 +35,7 @@ void send_msg(int client_socket)
 
 void recv_msg(int client_socket)
 {
-    char msg[MSG_SIZE];
+    char msg[MSG_SIZE] = "";
     while (true)
     {
         if (recv(client_socket, msg, sizeof(msg), 0) <= 0)
@@ -43,13 +43,8 @@ void recv_msg(int client_socket)
             continue;
         }
 
-        char backspace_code = 8;
-        std::string type_here_msg = "Type here: ";
-        int type_here_msg_size = type_here_msg.length() + 1;
-        for (int i = 0; i < type_here_msg_size; ++i)
-        {
-            std::cout << backspace_code;
-        }
+        std::string type_here_msg = "Type: ";
+        std::cout << "\n\033[A\033[2K";
         std::cout << msg << std::endl;
         std::cout << type_here_msg;
         std::fflush(stdout);
