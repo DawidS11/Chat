@@ -1,9 +1,6 @@
 CC = g++
 
-CFLAGS = -std=c++20 -Wall -Wextra $(CPPFLAGS)
-
-#chat: client.o server.o
-#	$(CC) $(CFLAGS) -o chat client.o server.o
+CFLAGS = -std=c++20 -Wall -Wextra -pthread
 
 all:
 	make client; make server
