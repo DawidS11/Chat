@@ -51,7 +51,13 @@ void handle_client(int client_socket)
         std::cerr << "Server: recv() name error." << std::endl;
         return;
     }
-    clients.try_emplace(client_socket, name);
+    
+    if (!clients.try_emplace(client_socket, name).second)
+    {
+        // TODO: Error handling.
+        std::cerr << "Server: the socket " << client_socket << " is already being used." << std::endl;
+        return;
+    }
     
     send_welcome_msg(client_socket);
 
@@ -73,7 +79,7 @@ void handle_client(int client_socket)
             mtx.unlock();
             char quit_msg[MSG_SIZE] = "has left the chat.";
             send_to_all(name, quit_msg, client_socket, true);
-            std::cout << "NUM CLIENTS2: " << num_clients << std::endl;
+            std::cout << "num clients: " << num_clients << std::endl;
         }
         else
         {
@@ -85,8 +91,6 @@ void handle_client(int client_socket)
 
 int main()
 {
-    std::cout << "SERVER" << std::endl;
-
     int server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server_socket == -1)
     {
@@ -131,11 +135,10 @@ int main()
             close(server_socket);
             exit(1);
         }
-        std::cout << "Cout: Client connected." << std::endl;
         mtx.lock();
         ++num_clients;
+        std::cout << "num clients: " << num_clients << std::endl;
         mtx.unlock();
-        std::cout << "NUM CLIENTS: " << num_clients << std::endl;
 
         std::thread th(handle_client, client_socket);
         th.detach();
