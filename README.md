@@ -1,5 +1,5 @@
 # Chat
-A simple console application written in C++. It uses sockets and multithreading.
+A simple chat console application written in C++. It uses sockets and multithreading.
 
 ## Build
 `./make all`
