@@ -5,7 +5,9 @@
 #include <arpa/inet.h>
 #include <thread>
 
-#include "values.hpp"
+#define IP "127.0.0.1"
+#define SERVER_PORT 2048
+#define MSG_SIZE 256
 
 void send_msg(int client_socket)
 {

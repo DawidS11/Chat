@@ -7,7 +7,9 @@
 #include <mutex>
 #include <unordered_map>
 
-#include "values.hpp"
+#define BACKLOG_LISTEN 10
+#define SERVER_PORT 2048
+#define MSG_SIZE 256
 
 int num_clients = 0;
 std::mutex mtx;
@@ -121,7 +123,7 @@ int main()
         error_handling(server_socket, "Server: bind() error.");
     }
 
-    if (listen(server_socket, MAX_CLIENTS) == -1)
+    if (listen(server_socket, BACKLOG_LISTEN) == -1)
     {
         error_handling(server_socket, "Server: listen() error.");
     }
