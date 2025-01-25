@@ -9,11 +9,9 @@
 
 void send_msg(int client_socket)
 {
-    //char msg[MSG_SIZE];
     while (true)
     {
         std::cout << "Type: ";
-        
         char msg[MSG_SIZE];
         std::cin.getline(msg, MSG_SIZE);
         std::cout << "\033[A\033[2K" << std::flush;
@@ -50,15 +48,19 @@ void recv_msg(int client_socket)
     }
 }
 
+void error_handling(const int socket, const std::string& msg)
+{
+    std::cerr << "[" << socket << "] " << msg << std::endl;
+    close(socket);
+    exit(1);
+}
+
 int main ()
 {
     int client_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (client_socket == -1)
     {
-        // TODO: Error handling.
-        std::cerr << "Client: socket() error." << std::endl;
-        close(client_socket);
-        exit(1);
+        error_handling(client_socket, "Client: socket() error.");
     }
 
     sockaddr_in server_addr;
@@ -69,10 +71,7 @@ int main ()
 
     if (connect(client_socket, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr)) == -1)
     {
-        // TODO: Error handling.
-        std::cerr << "Client: connect() error." << std::endl;
-        close(client_socket);
-        exit(1);
+        error_handling(client_socket, "Client: connect() error.");
     }
 
     char name[MSG_SIZE];

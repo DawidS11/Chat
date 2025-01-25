@@ -42,20 +42,32 @@ void send_welcome_msg(const int client_socket)
     }
 }
 
+void error_handling(const int socket, const std::string& msg, const bool do_close = true, const bool do_exit = true)
+{
+    std::cerr << "[" << socket << "] " << msg << std::endl;
+    if (do_close)
+    {
+        close(socket);
+    }
+    if (do_exit)
+    {
+        exit(1);
+    }
+}
+
 void handle_client(int client_socket)
 {
     char name[MSG_SIZE];
     if (recv(client_socket, name, sizeof(name), 0) == -1)
     {
-        // TODO: Error handling.
-        std::cerr << "Server: recv() name error." << std::endl;
+        error_handling(client_socket, "Server: recv() name error.", false, false);
         return;
     }
     
     if (!clients.try_emplace(client_socket, name).second)
     {
-        // TODO: Error handling.
-        std::cerr << "Server: the socket " << client_socket << " is already being used." << std::endl;
+        const std::string& error_msg = "Server: the socket " + std::to_string(client_socket) + " is already being used.";
+        error_handling(client_socket, error_msg, false, false);
         return;
     }
     
@@ -94,10 +106,8 @@ int main()
     int server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server_socket == -1)
     {
-        // TODO: Error handling.
+        error_handling(server_socket, "Server: socket() error.");
         std::cerr << "Server: socket() error." << std::endl;
-        close(server_socket);
-        exit(1);
     }
 
     sockaddr_in server_addr;
@@ -108,18 +118,12 @@ int main()
 
     if (bind(server_socket, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr)) == -1)
     {
-        // TODO: Error handling.
-        std::cerr << "Server: bind() error." << std::endl;
-        close(server_socket);
-        exit(1);
+        error_handling(server_socket, "Server: bind() error.");
     }
 
     if (listen(server_socket, MAX_CLIENTS) == -1)
     {
-        // TODO: Error handling.
-        std::cerr << "Server: listen() error." << std::endl;
-        close(server_socket);
-        exit(1);
+        error_handling(server_socket, "Server: listen() error.");
     }
 
     sockaddr_in client_addr;
@@ -130,10 +134,7 @@ int main()
         client_socket = accept(server_socket, reinterpret_cast<sockaddr*>(&client_addr), &client_len);
         if (client_socket == -1)
         {
-            // TODO: Error handling.
-            std::cerr << "Server: accept() error." << std::endl;
-            close(server_socket);
-            exit(1);
+            error_handling(server_socket, "Server: accept() error.");
         }
         mtx.lock();
         ++num_clients;
